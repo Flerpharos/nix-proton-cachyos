@@ -27,7 +27,7 @@ jobs:
          OLD_CONTENT=$(cat versions.json)
 
          # Get latest version and properly encode the URL
-         LATEST=$(curl -s 'https://mirror.cachyos.org/repo/x86_64_v3/cachyos-v3/' | grep -Po 'proton-cachyos-1:\d+\.\d+\.\d+-\d+-x86_64_v3\.pkg\.tar\.zst' | sort -V | tail -n1)
+         LATEST=$(curl -s 'https://mirror.cachyos.org/repo/x86_64/cachyos/' | grep -Po 'proton-cachyos-1:\d+\.\d+\.\d+-\d+-x86_64\.pkg\.tar\.zst' | sort -V | tail -n1)
          ENCODED_LATEST=${LATEST//:/%3A}
          
          BASE=$(echo $LATEST | grep -Po '(?<=:)\d+\.\d+(?=\.)')
@@ -35,7 +35,7 @@ jobs:
 
          # Download file to temporary location
          TEMP_FILE=$(mktemp)
-         curl -L "https://mirror.cachyos.org/repo/x86_64_v3/cachyos-v3/${ENCODED_LATEST}" -o "$TEMP_FILE"
+         curl -L "https://mirror.cachyos.org/repo/x86_64/cachyos/${ENCODED_LATEST}" -o "$TEMP_FILE"
 
          # Get hash of the downloaded file
          HASH=$(nix hash file --base64 --type sha256 "$TEMP_FILE")
@@ -69,9 +69,8 @@ jobs:
 
      - name: Create Pull Request
        if: env.UPDATE_NEEDED == 'true'
-       uses: peter-evans/create-pull-request@v5
+       uses: peter-evans/create-pull-request@v8
        with:
-         token: ${{ secrets.PAT }}
          commit-message: 'proton-cachyos: update to latest version'
          title: 'Update proton-cachyos'
          body: |
