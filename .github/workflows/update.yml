@@ -35,7 +35,7 @@ jobs:
 
          # Download file to temporary location
          TEMP_FILE=$(mktemp)
-         curl -L "https://mirror.cachyos.org/repo/x86_64_v3/cachyos-v3/${ENCODED_LATEST}" -o "$TEMP_FILE"
+         curl -L "https://mirror.cachyos.org/repo/x86_64/cachyos/${ENCODED_LATEST}" -o "$TEMP_FILE"
 
          # Get hash of the downloaded file
          HASH=$(nix hash file --base64 --type sha256 "$TEMP_FILE")
